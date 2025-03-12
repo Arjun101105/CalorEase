@@ -6,7 +6,7 @@ import { ClipLoader } from "react-spinners";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState(null);
   const [userData, setUserData] = useState({
     userId: "",
     age: "",
@@ -17,7 +17,7 @@ export default function Dashboard() {
 
   const [duration, setDuration] = useState("");
   const [workout_type, setWorkout_type] = useState("No Workout");
-  const [calories, setCalories] = useState<number | null>(null);
+  const [calories, setCalories] = useState(null);
   const [note, setNote] = useState(""); // Add note state
   const [loading, setLoading] = useState(false);
   const [workouts, setWorkouts] = useState([]);
@@ -134,10 +134,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-gray-100 p-4 md:p-6">
+    <div className="min-h-screen bg-[#141414] text-[#EAEAEA] p-4 md:p-6">
       {/* Navbar */}
-      <div className="flex flex-col sm:flex-row justify-between items-center p-4 md:p-5 bg-[#222831] rounded-xl shadow-lg">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#FFD700]">CalorEase</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-center p-4 md:p-5 bg-[#1E1E1E] rounded-xl shadow-lg">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#EAEAEA]">CalorEase</h1>
         {user && <p className="text-lg mt-2 sm:mt-0">Welcome, <span className="font-semibold">{user.toUpperCase()}</span>!</p>}
         <button 
           onClick={handleLogout} 
@@ -148,8 +148,8 @@ export default function Dashboard() {
       </div>
 
       {/* Calories Calculator */}
-      <div className="bg-[#0F3460] p-5 md:p-6 rounded-xl mt-6 shadow-lg">
-        <h2 className="text-2xl md:text-3xl font-semibold text-[#FFD700] mb-4">Calculate Calories Burnt</h2>
+      <div className="bg-[#1E1E1E] p-5 md:p-6 rounded-xl mt-6 shadow-lg">
+        <h2 className="text-2xl md:text-3xl font-semibold text-[#EAEAEA] mb-4">Calculate Calories Burnt</h2>
         <div className="flex flex-col gap-3">
           <input 
             type="number" 
@@ -177,14 +177,14 @@ export default function Dashboard() {
           <button 
             onClick={calculateCalories}
             disabled={loading}
-            className="bg-[#FFD700] text-black font-bold py-2 px-4 rounded-lg hover:bg-yellow-400 transition duration-300"
+            className="bg-[#EAEAEA] text-black font-bold py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-300"
           >
             {loading ? "Calculating..." : "Calculate"}
           </button>
         </div>
 
         {loading ? (
-          <ClipLoader color="#FFD700" size={35} className="mt-4" />
+          <ClipLoader color="#EAEAEA" size={35} className="mt-4" />
         ) : calories !== null && (
           <>
             <p className="text-lg mt-4">🔥 Estimated Calories Burnt: <span className="font-bold">{calories} kcal</span></p>
@@ -199,23 +199,29 @@ export default function Dashboard() {
       </div>
 
       {/* Workout History */}
-      <div className="mt-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-[#FFD700]">Workout History</h2>
-        {workouts.length > 0 ? (
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {workouts.map((workout, index) => (
-              <div key={index} className="bg-[#142850] p-4 rounded-lg shadow-md">
-                <p><strong>Workout:</strong> {workout.workoutType}</p>
-                <p><strong>Duration:</strong> {workout.duration} min</p>
-                <p><strong>Calories Burnt:</strong> {workout.caloriesBurnt} kcal</p>
-                {workout.note && <p><strong>Note:</strong> {workout.note}</p>} {/* Display note if available */}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="mt-2 text-gray-400">No workouts recorded yet.</p>
-        )}
+      <div className="mt-6 flex justify-between items-center">
+        <h2 className="text-2xl md:text-3xl font-semibold text-[#EAEAEA]">Workout History</h2>
+        <button 
+          onClick={() => router.push("/progress-reports")}
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
+        >
+          Progress Reports
+        </button>
       </div>
+      {workouts.length > 0 ? (
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {workouts.map((workout, index) => (
+            <div key={index} className="bg-[#1E1E1E] p-4 rounded-lg shadow-md">
+              <p><strong>Workout:</strong> {workout.workoutType}</p>
+              <p><strong>Duration:</strong> {workout.duration} min</p>
+              <p><strong>Calories Burnt:</strong> {workout.caloriesBurnt} kcal</p>
+              {workout.note && <p><strong>Note:</strong> {workout.note}</p>} {/* Display note if available */}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-2 text-gray-400">No workouts recorded yet.</p>
+      )}
     </div>
   );
 }

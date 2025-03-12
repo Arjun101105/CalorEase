@@ -6,19 +6,19 @@ import { useState, useEffect } from "react";
 export default function GetDetails() {
   const router = useRouter();
 
-  function handleHome(){
+  function handleHome() {
     router.push("/");
   }
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [age, setAge] = useState("");
-  const [gender, setGender] = useState("male"); // Default to male
+  const [gender, setGender] = useState("male");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    // Retrieve stored username & password from session storage
     const storedUsername = sessionStorage.getItem("signupUsername");
     const storedPassword = sessionStorage.getItem("signupPassword");
 
@@ -26,16 +26,16 @@ export default function GetDetails() {
       setUsername(storedUsername);
       setPassword(storedPassword);
     } else {
-      // If missing, redirect back to signup
       router.push("/signup");
     }
   }, []);
 
   async function handleSignup() {
     if (!age || !height || !weight) {
-      alert("Please fill in all fields");
+      setError("All fields are required.");
       return;
     }
+    setError("");
 
     const userData = { username, password, age, gender, height, weight };
 
@@ -48,7 +48,7 @@ export default function GetDetails() {
 
       if (res.ok) {
         alert("Signup Successful!");
-        router.push("/dashboard"); // Redirect to user dashboard
+        router.push("/dashboard");
       } else {
         alert("Signup Failed");
       }
@@ -56,57 +56,65 @@ export default function GetDetails() {
       console.error("Error signing up:", error);
     }
   }
-  // justify-center items-center gap-4
-  return (
-    <div className="w-screen h-screen bg-[#29292B] flex flex-col">
 
-      <div className="text-[#C9C7BA] p-5" onClick={handleHome}>
+  return (
+    <div className="w-screen h-screen bg-[#141414] flex flex-col">
+      {/* Header */}
+      <div className="text-[#EAEAEA] p-5 cursor-pointer" onClick={handleHome}>
         <h1 className="font-irish text-4xl sm:text-5xl">CalorEase</h1>
       </div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-3 w-full max-w-sm">
 
-      
-      <h1 className="font-irish text-3xl text-[#C9C7BA]">Complete Your Signup</h1>
+      {/* Signup Details Form */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 w-full max-w-sm bg-[#1E1E1E] p-8 rounded-lg shadow-xl">
+        <h1 className="font-irish text-3xl text-[#EAEAEA]">Complete Your Signup</h1>
 
-      <input
-        type="number"
-        placeholder="Age"
-        className="bg-[#C9C7BA] rounded-md p-2 w-60"
-        value={age}
-        onChange={(e) => setAge(e.target.value)}
-      />
+        <input
+          type="number"
+          placeholder="Age"
+          className="bg-[#292929] text-[#EAEAEA] placeholder-[#A0A0A0] rounded-md p-3 w-64 outline-none border border-[#3A3A3A] focus:ring-2 focus:ring-[#EAEAEA] focus:border-[#EAEAEA]"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+        />
 
-      <select
-        className="bg-[#C9C7BA] rounded-md p-2 w-60"
-        value={gender}
-        onChange={(e) => setGender(e.target.value)}
-      >
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select>
+        <select
+          className="bg-[#292929] text-[#EAEAEA] rounded-md p-3 w-64 outline-none border border-[#3A3A3A] focus:ring-2 focus:ring-[#EAEAEA] focus:border-[#EAEAEA]"
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+        >
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
 
-      <input
-        type="number"
-        placeholder="Height (cm)"
-        className="bg-[#C9C7BA] rounded-md p-2 w-60"
-        value={height}
-        onChange={(e) => setHeight(e.target.value)}
-      />
+        <input
+          type="number"
+          placeholder="Height (cm)"
+          className="bg-[#292929] text-[#EAEAEA] placeholder-[#A0A0A0] rounded-md p-3 w-64 outline-none border border-[#3A3A3A] focus:ring-2 focus:ring-[#EAEAEA] focus:border-[#EAEAEA]"
+          value={height}
+          onChange={(e) => setHeight(e.target.value)}
+        />
 
-      <input
-        type="number"
-        placeholder="Weight (kg)"
-        className="bg-[#C9C7BA] rounded-md p-2 w-60"
-        value={weight}
-        onChange={(e) => setWeight(e.target.value)}
-      />
+        <input
+          type="number"
+          placeholder="Weight (kg)"
+          className="bg-[#292929] text-[#EAEAEA] placeholder-[#A0A0A0] rounded-md p-3 w-64 outline-none border border-[#3A3A3A] focus:ring-2 focus:ring-[#EAEAEA] focus:border-[#EAEAEA]"
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+        />
 
-      <button
-        className="font-irish bg-[#C9C7BA] text-[#29292B] px-4 py-2 rounded-md mt-2"
-        onClick={handleSignup}
-      >
-        Complete Signup
-      </button>
+        {/* Error Message */}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <button
+          className={`font-irish px-5 py-3 rounded-md mt-2 transition-all duration-200 w-64 ${
+            age && height && weight
+              ? "bg-[#EAEAEA] text-[#141414] hover:bg-[#F5F5F5]"
+              : "bg-[#3A3A3A] text-[#A0A0A0] cursor-not-allowed"
+          }`}
+          onClick={handleSignup}
+          disabled={!age || !height || !weight}
+        >
+          Complete Signup
+        </button>
       </div>
     </div>
   );

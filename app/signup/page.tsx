@@ -12,12 +12,14 @@ export default function Signup() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   function handleNext() {
     if (!username || !password) {
-      alert("Please fill in all fields");
+      setError("All fields are required.");
       return;
     }
+    setError("");
 
     // Store username and password in session storage
     sessionStorage.setItem("signupUsername", username);
@@ -28,20 +30,20 @@ export default function Signup() {
   }
 
   return (
-    <div className="w-screen h-screen bg-[#1E1E1E] flex flex-col">
+    <div className="w-screen h-screen bg-[#141414] flex flex-col">
       {/* Header */}
-      <div className="text-[#C9C7BA] p-5 cursor-pointer" onClick={handleHome}>
+      <div className="text-[#EAEAEA] p-5 cursor-pointer" onClick={handleHome}>
         <h1 className="font-irish text-4xl sm:text-5xl">CalorEase</h1>
       </div>
 
       {/* Signup Form */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 w-full max-w-sm bg-[#29292B] p-6 rounded-lg shadow-lg">
-        <h1 className="font-irish text-3xl text-[#C9C7BA]">Signup</h1>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 w-full max-w-sm bg-[#1E1E1E] p-8 rounded-lg shadow-xl">
+        <h1 className="font-irish text-3xl text-[#EAEAEA]">Sign Up</h1>
 
         <input
           type="text"
           placeholder="Username"
-          className="bg-[#3A3A3C] text-[#C9C7BA] placeholder-gray-400 rounded-md p-3 w-64 outline-none focus:ring-2 focus:ring-[#C9C7BA]"
+          className="bg-[#292929] text-[#EAEAEA] placeholder-[#A0A0A0] rounded-md p-3 w-64 outline-none border border-[#3A3A3A] focus:ring-2 focus:ring-[#EAEAEA] focus:border-[#EAEAEA]"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -49,14 +51,22 @@ export default function Signup() {
         <input
           type="password"
           placeholder="Password"
-          className="bg-[#3A3A3C] text-[#C9C7BA] placeholder-gray-400 rounded-md p-3 w-64 outline-none focus:ring-2 focus:ring-[#C9C7BA]"
+          className="bg-[#292929] text-[#EAEAEA] placeholder-[#A0A0A0] rounded-md p-3 w-64 outline-none border border-[#3A3A3A] focus:ring-2 focus:ring-[#EAEAEA] focus:border-[#EAEAEA]"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
+        {/* Error Message */}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         <button
-          className="font-irish bg-[#C9C7BA] text-[#29292B] px-5 py-3 rounded-md mt-2 hover:bg-[#E0DFD5] transition-colors duration-200"
+          className={`font-irish px-5 py-3 rounded-md mt-2 transition-all duration-200 w-64 ${
+            username && password
+              ? "bg-[#EAEAEA] text-[#141414] hover:bg-[#F5F5F5]"
+              : "bg-[#3A3A3A] text-[#A0A0A0] cursor-not-allowed"
+          }`}
           onClick={handleNext}
+          disabled={!username || !password}
         >
           Next
         </button>
