@@ -7,7 +7,7 @@ export async function POST(req) {
   try {
     await connectDB(); // ✅ Ensure database connection
 
-    const { userId, duration, workout_type, calories_burned } = await req.json(); // ✅ Correct field names
+    const { userId, duration, workout_type, calories_burned, note } = await req.json(); // ✅ Correct field names
 
     // **Ensure required fields exist**
     if (!userId || !duration || !workout_type || !calories_burned) {
@@ -19,6 +19,7 @@ export async function POST(req) {
       duration,
       workoutType: workout_type, // ✅ Map to correct schema field
       caloriesBurnt: calories_burned, // ✅ Map to correct schema field
+      note, // Save the note
     });
 
     await newWorkout.save();

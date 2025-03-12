@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [duration, setDuration] = useState("");
   const [workout_type, setWorkout_type] = useState("No Workout");
   const [calories, setCalories] = useState<number | null>(null);
+  const [note, setNote] = useState(""); // Add note state
   const [loading, setLoading] = useState(false);
   const [workouts, setWorkouts] = useState([]);
 
@@ -119,6 +120,7 @@ export default function Dashboard() {
         duration,
         workout_type,
         calories_burned: calories,
+        note, // Include note in the request
       }),
     });
 
@@ -166,6 +168,12 @@ export default function Dashboard() {
             <option value="Strength">Strength</option>
             <option value="No Workout">No Workout</option>
           </select>
+          <textarea
+            placeholder="Add a note (optional)"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            className="bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700] placeholder-gray-400"
+          />
           <button 
             onClick={calculateCalories}
             disabled={loading}
@@ -200,6 +208,7 @@ export default function Dashboard() {
                 <p><strong>Workout:</strong> {workout.workoutType}</p>
                 <p><strong>Duration:</strong> {workout.duration} min</p>
                 <p><strong>Calories Burnt:</strong> {workout.caloriesBurnt} kcal</p>
+                {workout.note && <p><strong>Note:</strong> {workout.note}</p>} {/* Display note if available */}
               </div>
             ))}
           </div>
