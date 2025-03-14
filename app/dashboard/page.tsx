@@ -1,8 +1,13 @@
 "use client";
 
+import dotenv from "dotenv";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
+
+dotenv.config()
+
 
 export default function Dashboard() {
   const router = useRouter();
@@ -77,7 +82,7 @@ export default function Dashboard() {
     setCalories(null);
 
     try {
-      const res = await fetch("https://calorease-api.onrender.com/calculate-calories", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API}/calculate-calories`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
