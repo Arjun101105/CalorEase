@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from "chart.js";
+import dayjs from "dayjs"; // Install with: npm install dayjs
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
@@ -43,15 +44,47 @@ export default function ProgressReports() {
     }
   };
 
+  // ✅ Utility function to fill missing days with 0 calories
+  const fillMissingDays = (data, startDate, endDate) => {
+    const completeData = [];
+    let currentDate = dayjs(startDate);
+
+    while (currentDate.isBefore(endDate) || currentDate.isSame(endDate, "day")) {
+      const dateStr = currentDate.format("YYYY-MM-DD");
+      const existingData = data.find((d) => d.date === dateStr);
+
+      completeData.push({
+        date: dateStr,
+        calories: existingData ? existingData.calories : 0,
+      });
+
+      currentDate = currentDate.add(1, "day");
+    }
+
+    return completeData;
+  };
+
   const fetchProgressData = async () => {
     if (!userData.userId) return;
     try {
       const res = await fetch(`/api/progress-reports?userId=${userData.userId}`, { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
-        console.log("Fetched Progress Data:", data);
-        setWeeklyData(data.weekly || []);
-        setMonthlyData(data.monthly || []);
+        
+        // Get today's date
+        const today = dayjs();
+        
+        // ✅ Weekly: Last 7 days including today
+        const lastWeekStart = today.subtract(6, "day");
+        const completeWeeklyData = fillMissingDays(data.weekly || [], lastWeekStart, today);
+
+        // ✅ Monthly: First to last day of this month
+        const monthStart = today.startOf("month");
+        const monthEnd = today.endOf("month");
+        const completeMonthlyData = fillMissingDays(data.monthly || [], monthStart, monthEnd);
+
+        setWeeklyData(completeWeeklyData);
+        setMonthlyData(completeMonthlyData);
       } else {
         console.error("Error fetching progress data:", res.statusText);
       }
@@ -124,7 +157,6 @@ export default function ProgressReports() {
       </div>
     );
   }
-  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#141414] to-[#141414] text-gray-100 p-4 md:p-6">

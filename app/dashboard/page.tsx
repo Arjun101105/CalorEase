@@ -215,6 +215,8 @@ export default function Dashboard() {
               <p><strong>Workout:</strong> {workout.workoutType}</p>
               <p><strong>Duration:</strong> {workout.duration} min</p>
               <p><strong>Calories Burnt:</strong> {workout.caloriesBurnt} kcal</p>
+              <p><strong>Date:</strong> {new Date(workout.createdAt).toLocaleDateString()}</p>
+              <p><strong>Time:</strong> {new Date(workout.createdAt).toLocaleTimeString()}</p>
               {workout.note && <p><strong>Note:</strong> {workout.note}</p>} {/* Display note if available */}
             </div>
           ))}
