@@ -114,8 +114,8 @@ export default function ProgressReports() {
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         fill: true,
-        tension: 0.4,
-        pointRadius: 5,
+        tension: 0, // ✅ Set to 0 to avoid errors in production
+        pointRadius: weeklyData.length > 0 ? 5 : 0, // Hide points when no data
         pointHoverRadius: 7,
       },
     ],
@@ -130,8 +130,8 @@ export default function ProgressReports() {
         borderColor: "rgba(153, 102, 255, 1)",
         backgroundColor: "rgba(153, 102, 255, 0.2)",
         fill: true,
-        tension: 0.4,
-        pointRadius: 5,
+        tension: 0, // ✅ Set to 0 to avoid errors in production
+        pointRadius: monthlyData.length > 0 ? 5 : 0,
         pointHoverRadius: 7,
       },
     ],
